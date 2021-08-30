@@ -9,8 +9,6 @@ const mult = multiparty();
 
 router.post(
   "/saveTask",
-  mult,
-  Upload,
   Auth,
   ValidateUser,
   BoardController.saveTask

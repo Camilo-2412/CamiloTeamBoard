@@ -11,7 +11,7 @@ import { RegisterUserComponent } from './admin/register-user/register-user.compo
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
+import { AuthGuard } from "./guard/auth.guard";
 
 const routes: Routes = [
   {
@@ -20,32 +20,39 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'listTasks',
+    path: 'listTask',
     component: ListTaskComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'saveTask',
     component: SaveTaskComponent,
+    canActivate: [AuthGuard],
   },
   {
     path : 'registerUser',
     component: RegisterUserComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'listUser',
     component: ListUserComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'updateUser',
     component: UpdateUserComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'registerRole',
     component: RegisterRoleComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'updateRole',
     component: UpdateRoleComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'login',
@@ -54,6 +61,7 @@ const routes: Routes = [
   {
     path: 'listRole',
     component: ListRoleComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'signUp',
