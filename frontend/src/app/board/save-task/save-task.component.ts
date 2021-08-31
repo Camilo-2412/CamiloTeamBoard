@@ -18,6 +18,8 @@ export class SaveTaskComponent implements OnInit {
   horizontalPosition: MatSnackBarHorizontalPosition = 'end';
   verticalPostion: MatSnackBarVerticalPosition = 'top';
   durationInSeconds: number = 2;
+  selectedFile: any;
+
   constructor(
     private _boardService: BoardService,
     private _router: Router,
@@ -25,6 +27,7 @@ export class SaveTaskComponent implements OnInit {
   ) {
     this.registerData = {};
     this.message = '';
+    this.selectedFile = null;
   }
 
   ngOnInit(): void {}
@@ -37,6 +40,39 @@ export class SaveTaskComponent implements OnInit {
       this.registerData = {};
     } else {
       this._boardService.saveTask(this.registerData).subscribe(
+        (res) => {
+          console.log(res);
+          this._router.navigate(['/listTask']);
+          this.message = 'Task create';
+          this.openSnackBarSuccesfull();
+          this.registerData = {};
+        },
+        (err) => {
+          console.log(err);
+          this.message = err.error;
+          this.openSnackBarError();
+        }
+      );
+    }
+  }
+
+  uploadImg(event: any){
+    this.selectedFile = <File>event.target.files[0];
+  }
+
+  saveTaskImg(){
+    if (!this.registerData.name || !this.registerData.description) {
+      console.log('Failed process: Incomplete data');
+      this.message = 'Failed process: Incomplete data';
+      this.openSnackBarError();
+      this.registerData = {};
+    } else {
+      const data = new FormData();
+      data.append('image',this.selectedFile, this.selectedFile.name);
+      data.append('name',this.registerData.name);
+      data.append('description',this.registerData.description);
+
+      this._boardService.saveTaskImg(data).subscribe(
         (res) => {
           console.log(res);
           this._router.navigate(['/listTask']);

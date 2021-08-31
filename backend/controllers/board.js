@@ -20,6 +20,32 @@ if (!result) return res.status(400).send("Error registering task");
 return res.status(200).send({ result });
 };
 
+const saveTaskImg = async (req, res) => {
+  if (!req.body.name || !req.body.description)
+    return res.status(400).send("Incomplete data");
+
+  let imageUrl = "";
+  if (req.files !== undefined && req.files.image.type) {
+    let url = req.protocol + "://" + req.get("host") + "/";
+    let serverImg =
+      "./uploads/" + moment().unix() + path.extname(req.files.image.path);
+    fs.createReadStream(req.files.image.path).pipe(fs.createWriteStream(serverImg));
+    imageUrl = url + "uploads/" + moment().unix() + path.extname(req.files.image.path);
+  }
+
+  let board = new Board({
+    userId: req.user._id,
+    name: req.body.name,
+    description: req.body.description,
+    taskStatus: "to-do",
+    imageUrl: imageUrl,
+  });
+
+  let result = await board.save();
+  if (!result) return res.status(400).send("Error registering task");
+  return res.status(200).send({ result });
+};
+
 const listTask = async(req,res) =>{
     let board = await Board.find({userId: req.user._id});
     if(!board || !board.length === 0) return res.status(400).send("You have no assigned tasks");
@@ -50,4 +76,4 @@ const deleteTask = async(req,res) =>{
     return res.status(200).send({message:"Task Deleted"});
 };
 
-module.exports = {saveTask, listTask, updateTask, deleteTask};
+module.exports = {saveTask, listTask, updateTask, deleteTask, saveTaskImg};

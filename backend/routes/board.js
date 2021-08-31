@@ -21,5 +21,13 @@ router.delete(
   ValidateUser,
   BoardController.deleteTask
 );
+router.post(
+  "/saveTaskImg",
+  mult,
+  Upload,
+  Auth,
+  ValidateUser,
+  BoardController.saveTaskImg
+);
 
 module.exports = router;
